@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:introduction_screen/src/model/page_view_model.dart';
 import 'package:introduction_screen/src/ui/intro_button.dart';
 import 'package:introduction_screen/src/ui/intro_page.dart';
@@ -225,60 +226,99 @@ class IntroductionScreenState extends State<IntroductionScreen> {
 
     return Scaffold(
       backgroundColor: widget.globalBackgroundColor,
-      body: Stack(
-        children: [
-          NotificationListener<ScrollNotification>(
-            onNotification: _onScroll,
-            child: PageView(
-              controller: _pageController,
-              physics: widget.freeze
-                  ? const NeverScrollableScrollPhysics()
-                  : const BouncingScrollPhysics(),
-              children: widget.pages.map((p) => IntroPage(page: p)).toList(),
-              onPageChanged: widget.onChange,
-            ),
-          ),
-          Positioned(
-            bottom: 16.0,
-            left: 16.0,
-            right: 16.0,
-            child: SafeArea(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: widget.skipFlex,
-                    child: isSkipBtn
-                        ? skipBtn
-                        : Opacity(opacity: 0.0, child: skipBtn),
-                  ),
-                  Expanded(
-                    flex: widget.dotsFlex,
-                    child: Center(
-                      child: widget.isProgress
-                          ? DotsIndicator(
-                              dotsCount: widget.pages.length,
-                              position: _currentPage,
-                              decorator: widget.dotsDecorator,
-                              onTap: widget.isProgressTap && !widget.freeze
-                                  ? (pos) => animateScroll(pos.toInt())
-                                  : null,
-                            )
-                          : const SizedBox(),
-                    ),
-                  ),
-                  Expanded(
-                    flex: widget.nextFlex,
-                    child: isLastPage
-                        ? doneBtn
-                        : widget.showNextButton
-                            ? nextBtn
-                            : Opacity(opacity: 0.0, child: nextBtn),
-                  ),
-                ],
+      body: AnimationLimiter(
+        child: Stack(
+          children: [
+            StaggeredAnimationBaseConfiguration(
+              position: 0,
+              child: NotificationListener<ScrollNotification>(
+                onNotification: _onScroll,
+                child: PageView(
+                  controller: _pageController,
+                  physics: widget.freeze
+                      ? const NeverScrollableScrollPhysics()
+                      : const BouncingScrollPhysics(),
+                  children: widget.pages.map((p) => IntroPage(page: p)).toList(),
+                  onPageChanged: widget.onChange,
+                ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 16.0,
+              left: 16.0,
+              right: 16.0,
+              child: SafeArea(
+                child: Row(
+                  children: [
+                    StaggeredAnimationBaseConfiguration(
+                      position: 1,
+                      child: Expanded(
+                        flex: widget.skipFlex,
+                        child: isSkipBtn
+                            ? skipBtn
+                            : Opacity(opacity: 0.0, child: skipBtn),
+                      ),
+                    ),
+                    StaggeredAnimationBaseConfiguration(
+                      position: 2,
+                      child: Expanded(
+                        flex: widget.dotsFlex,
+                        child: Center(
+                          child: widget.isProgress
+                              ? DotsIndicator(
+                                  dotsCount: widget.pages.length,
+                                  position: _currentPage,
+                                  decorator: widget.dotsDecorator,
+                                  onTap: widget.isProgressTap && !widget.freeze
+                                      ? (pos) => animateScroll(pos.toInt())
+                                      : null,
+                                )
+                              : const SizedBox(),
+                        ),
+                      ),
+                    ),
+                    StaggeredAnimationBaseConfiguration(
+                      position: 3,
+                      child: Expanded(
+                        flex: widget.nextFlex,
+                        child: isLastPage
+                            ? doneBtn
+                            : widget.showNextButton
+                                ? nextBtn
+                                : Opacity(opacity: 0.0, child: nextBtn),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StaggeredAnimationBaseConfiguration extends StatelessWidget {
+  final Widget child;
+  final int position;
+  final bool isUp;
+
+  StaggeredAnimationBaseConfiguration({
+    @required this.child,
+    @required this.position,
+    this.isUp = true
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimationConfiguration.staggeredList(
+      position: position,
+      child: FadeInAnimation(
+        child: SlideAnimation(
+          verticalOffset: isUp == true ? 50.0 : -50.0,
+          child: child,
+        )
       ),
     );
   }

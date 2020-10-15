@@ -11,3 +11,4 @@ dependencies:
     sdk: flutter
 
   dots_indicator: ^1.2.0
+  flutter_staggered_animations: ^0.1.2
