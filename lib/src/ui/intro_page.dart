@@ -21,21 +21,21 @@ class IntroPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (page.image != null)
-                StaggeredAnimationBaseConfiguration(
-                  position: 0,
-                  isUp: false,
-                  child: Expanded(
-                    flex: page.decoration.imageFlex,
+                Expanded(
+                  flex: page.decoration.imageFlex,
+                  child: StaggeredAnimationBaseConfiguration(
+                    position: 0,
+                    isUp: false,
                     child: Padding(
                       padding: page.decoration.imagePadding,
                       child: page.image,
                     ),
                   ),
                 ),
-              StaggeredAnimationBaseConfiguration(
-                position: 1,
-                child: Expanded(
-                  flex: page.decoration.bodyFlex,
+              Expanded(
+                flex: page.decoration.bodyFlex,
+                child: StaggeredAnimationBaseConfiguration(
+                  position: 1,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 70.0),
                     child: SingleChildScrollView(

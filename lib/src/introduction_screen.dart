@@ -250,19 +250,19 @@ class IntroductionScreenState extends State<IntroductionScreen> {
               child: SafeArea(
                 child: Row(
                   children: [
-                    StaggeredAnimationBaseConfiguration(
-                      position: 1,
-                      child: Expanded(
-                        flex: widget.skipFlex,
+                    Expanded(
+                      flex: widget.skipFlex,
+                      child: StaggeredAnimationBaseConfiguration(
+                        position: 1,
                         child: isSkipBtn
                             ? skipBtn
                             : Opacity(opacity: 0.0, child: skipBtn),
                       ),
                     ),
-                    StaggeredAnimationBaseConfiguration(
-                      position: 2,
-                      child: Expanded(
-                        flex: widget.dotsFlex,
+                    Expanded(
+                      flex: widget.dotsFlex,
+                      child: StaggeredAnimationBaseConfiguration(
+                        position: 2,
                         child: Center(
                           child: widget.isProgress
                               ? DotsIndicator(
@@ -277,10 +277,10 @@ class IntroductionScreenState extends State<IntroductionScreen> {
                         ),
                       ),
                     ),
-                    StaggeredAnimationBaseConfiguration(
-                      position: 3,
-                      child: Expanded(
-                        flex: widget.nextFlex,
+                    Expanded(
+                      flex: widget.nextFlex,
+                      child: StaggeredAnimationBaseConfiguration(
+                        position: 3,
                         child: isLastPage
                             ? doneBtn
                             : widget.showNextButton
