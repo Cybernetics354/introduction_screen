@@ -254,9 +254,20 @@ class IntroductionScreenState extends State<IntroductionScreen> {
                       flex: widget.skipFlex,
                       child: StaggeredAnimationBaseConfiguration(
                         position: 1,
-                        child: isSkipBtn
+                        child: AnimatedSwitcher(
+                          switchInCurve: Curves.bounceOut,
+                          switchOutCurve: Curves.bounceOut,
+                          duration: Duration(milliseconds: 400),
+                          transitionBuilder: (child, animation) {
+                            return ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            );
+                          },
+                          child: isSkipBtn
                             ? skipBtn
                             : Opacity(opacity: 0.0, child: skipBtn),
+                        ) 
                       ),
                     ),
                     Expanded(
@@ -281,11 +292,22 @@ class IntroductionScreenState extends State<IntroductionScreen> {
                       flex: widget.nextFlex,
                       child: StaggeredAnimationBaseConfiguration(
                         position: 3,
-                        child: isLastPage
+                        child: AnimatedSwitcher(
+                          switchInCurve: Curves.bounceOut,
+                          switchOutCurve: Curves.bounceOut,
+                          duration: Duration(milliseconds: 400),
+                          transitionBuilder: (child, animation) {
+                            return ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            );
+                          },
+                          child: isLastPage
                             ? doneBtn
                             : widget.showNextButton
                                 ? nextBtn
                                 : Opacity(opacity: 0.0, child: nextBtn),
+                        )
                       ),
                     ),
                   ],
@@ -313,6 +335,8 @@ class StaggeredAnimationBaseConfiguration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimationConfiguration.staggeredList(
+      duration: Duration(milliseconds: 500),
+      delay: Duration(milliseconds: 200),
       position: position,
       child: FadeInAnimation(
         child: SlideAnimation(
